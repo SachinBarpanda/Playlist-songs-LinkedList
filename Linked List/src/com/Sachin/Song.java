@@ -22,5 +22,9 @@ public class Song {
     public String toString(){
         return this.title +":"+this.duration;
     }
-
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof Song)) return false;//Return false if the object we're checking against is not an instance of this class (Song)
+        Song song = (Song)obj;
+        return song.getTitle().equals(getTitle()) && song.duration == duration;
+    }
 }
