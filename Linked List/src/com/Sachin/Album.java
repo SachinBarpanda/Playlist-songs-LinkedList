@@ -30,7 +30,7 @@ public class Album {
         //let us check if the song is present in the memory
 
         if (findSong(title) == null) {
-            songs.add(new Song(name, duration));
+            songs.add(new Song(title, duration));
             return true;
         }
         return false;
