@@ -1,7 +1,9 @@
 package com.Sachin;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Scanner;
 
 public class Main {
 
@@ -75,19 +77,112 @@ public class Main {
     }
 
     private static void play(LinkedList<Song> playlist) {
-        ListIterator<Song> iterator = playlist.listIterator();
-        if (playlist.isEmpty()) {
-            System.out.println("No songs in the playlist");
-            return;
+        ListIterator<Song>listIterator=playlist.listIterator();
+        Scanner input=new Scanner(System.in);
+        //ListIterator Interface is used to traverse the element in backward and forward direction.
+        //By using hasNext and hasPrevious
+        if(playlist.size()==0){
+            System.out.println("Nothing in the playlist");
         }
-
-        //Iterate over all songs in the list
-        while(iterator.hasNext()) {
-            System.out.println(iterator.next().toString());
+        else{
+            System.out.println("Now playing "+listIterator.next().toString());
+            //This probably plays the first song in the list
+            actionButtons();
         }
+        boolean quit=false;
 
-        System.out.println();//Used as a spacer
-        System.out.println("Done playing the current playlist");
+        //to track the direction of list iterator
+        boolean Forward = true;
+        while(!quit){
+
+            System.out.println("Enter your choice");
+            int action =input.nextInt();
+            input.nextLine();
+
+
+            switch (action){
+                case 0:
+                    System.out.println("Playlist completed,No more Songs to play");
+                    quit=true;
+
+                case 1:
+                    if(!Forward){
+                        //we can test if the user has selected to go backward then make it right
+                        //it will prevent the iterator to print songs in a loop
+                        if(listIterator.hasNext()){
+                            listIterator.next();
+                        }
+                        Forward=true;//make it return true so that we start  where we left off!
+                    }
+
+                    if(listIterator.hasNext()){
+                        System.out.println("Now Playing" + listIterator.next().toString());
+                    }
+                    else {
+                        System.out.println("Playlist has ended");
+                        Forward=false;
+                    }
+
+                    break;
+
+                case 2://we've to move backward when the variable is true
+                    if(Forward){
+                        if(listIterator.hasPrevious()){
+                            listIterator.previous();
+                        }
+                        Forward=false;//make it return false
+                    }
+
+                    if(listIterator.hasPrevious()){
+                        System.out.println("Now Playing" + listIterator.previous().toString());
+                    }
+                    else {
+                        System.out.println("Playlist has ended");
+                        Forward = true;
+                    }//make it return true at last
+                    break;
+
+                case 3:
+                    if(Forward){
+                        if(listIterator.hasPrevious()){
+                            System.out.println("Replaying the same song " + listIterator.previous().toString());
+
+                            Forward=false;//now going backward to replay the song again
+                        }
+                    }
+                    else if(!Forward){
+                        if(listIterator.hasNext()){
+                            System.out.println("Replaying the same song" + listIterator.next().toString());
+
+                            Forward=true;
+                        }
+                    }
+                    break;
+
+                    case 4:
+                        playlistList(playlist);
+                        break;
+
+
+                    case 5:
+                        actionButtons();
+                        break;
+
+                    case 6:
+                            //delete song from playlist
+                        if(playlist.size()>0){
+                            listIterator.remove();
+                            if(listIterator.hasNext()){
+                                System.out.println("Now playing "+listIterator.next());
+                            }
+                            else if(listIterator.hasPrevious()){
+                                System.out.println("Now playing "+listIterator.previous());
+                            }
+                        }
+                        break;
+
+            }
+        }
     }
 
     private static Album getAlbum(final String artistsName, final String albumName) {
@@ -95,6 +190,27 @@ public class Main {
             if (album.getArtist().equals(artistsName) && album.getName().equals(albumName)) return album;
         }
         return null;
+    }
+
+    //let's make a mechanism to add additional features to playlist
+
+    private static void actionButtons(){
+        System.out.println("Enter the choice as follows\n" + "0 : To quit \n"
+                            +"1 : Enter to move to next song on playlist\n"
+                            +"2 : Enter to move to previous song on playlist\n "
+                            +"3 : To replay the current song\n"
+                            +"4 : To print all the songs in the playlist\n"
+                            +"5 : To print the action buttons that can be performed\n"
+                            +"6 : For deleting the current song");
+    }
+
+    private static void playlistList(LinkedList<Song> playList){
+        Iterator<Song>iterator=playList.iterator();
+        System.out.println("--------------------------");
+        while(iterator.hasNext()){
+            System.out.println(iterator.next());
+        }
+        System.out.println("**********THE END**************");
     }
 
 }
